@@ -1,6 +1,18 @@
+# Compiled files (the stuff STS/Maven creates)
 target/
+bin/
+
+# IDE specific files (STS/Eclipse settings)
 .settings/
 .project
 .classpath
-bin/
+.factorypath
+
+# Maven wrapper
 .mvn/
+mvnw
+mvnw.cmd
+
+# --- DAY 2 SPECIAL ADDITION ---
+# Private uploads (prevents your PDFs from going public)
+uploads/
