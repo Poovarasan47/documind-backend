@@ -16,3 +16,7 @@ mvnw.cmd
 # --- DAY 2 SPECIAL ADDITION ---
 # Private uploads (prevents your PDFs from going public)
 uploads/
+
+# --- DAY 3 SECURITY ---
+# Sensitive configuration (API Keys & DB Passwords)
+src/main/resources/application.properties

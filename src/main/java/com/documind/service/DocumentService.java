@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,6 +32,7 @@ public class DocumentService {
     private final DocumentRepository documentRepository;
     private final UserRepository userRepository;
     private final FileStorageProperties fileStorageProperties;
+    private final GeminiService geminiService;
     
     private Path fileStorageLocation;
     
@@ -77,13 +79,38 @@ public class DocumentService {
             User user = userRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new RuntimeException("User not found"));
             
+            // Extract text and generate AI summary
+            String documentText = "";
+            String aiSummary = "";
+            String aiCategory = category;
+            
+            try {
+                File savedFile = targetLocation.toFile();
+                documentText = geminiService.extractText(savedFile, file.getContentType());
+                
+                // Generate AI summary
+                if (!documentText.isEmpty()) {
+                    aiSummary = geminiService.summarizeDocument(documentText);
+                    
+                    // Auto-classify if no category provided
+                    if (category == null || category.trim().isEmpty()) {
+                        aiCategory = geminiService.classifyDocument(documentText);
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("AI processing failed: " + e.getMessage());
+                aiSummary = "AI processing not available";
+                aiCategory = category != null ? category : "Uncategorized";
+            }
+            
             // Create document entity
             Document document = new Document();
             document.setFileName(originalFileName);
             document.setFilePath(fileName);
             document.setFileType(file.getContentType());
             document.setFileSize(file.getSize());
-            document.setCategory(category != null ? category : "Uncategorized");
+            document.setCategory(aiCategory);
+            document.setAiSummary(aiSummary);
             document.setUser(user);
             document.setUploadedAt(LocalDateTime.now());
             
@@ -93,6 +120,10 @@ public class DocumentService {
             throw new RuntimeException("Could not store file " + originalFileName);
         }
     }
+       
+        
+        
+    
     
     public List<DocumentResponse> getUserDocuments(String userEmail) {
         User user = userRepository.findByEmail(userEmail)
