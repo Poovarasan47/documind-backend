@@ -37,9 +37,9 @@ public class AIController {
             Path filePath = Paths.get("uploads").resolve(document.getFilePath());
             File file = filePath.toFile();
             
-            // Extract text and summarize
+            // Extract text and summarize (🚨 Added userEmail)
             String text = geminiService.extractText(file, document.getFileType());
-            String summary = geminiService.summarizeDocument(text);
+            String summary = geminiService.summarizeDocument(text, userEmail);
             
             Map<String, String> response = new HashMap<>();
             response.put("summary", summary);
@@ -74,9 +74,9 @@ public class AIController {
             Path filePath = Paths.get("uploads").resolve(document.getFilePath());
             File file = filePath.toFile();
             
-            // Extract text and answer question
+            // Extract text and answer question (🚨 Added userEmail)
             String text = geminiService.extractText(file, document.getFileType());
-            String answer = geminiService.answerQuestion(text, question);
+            String answer = geminiService.answerQuestion(text, question, userEmail);
             
             Map<String, String> response = new HashMap<>();
             response.put("question", question);
@@ -104,9 +104,9 @@ public class AIController {
             Path filePath = Paths.get("uploads").resolve(document.getFilePath());
             File file = filePath.toFile();
             
-            // Extract text and classify
+            // Extract text and classify (🚨 Added userEmail)
             String text = geminiService.extractText(file, document.getFileType());
-            String category = geminiService.classifyDocument(text);
+            String category = geminiService.classifyDocument(text, userEmail);
             
             Map<String, String> response = new HashMap<>();
             response.put("category", category);
@@ -133,9 +133,9 @@ public class AIController {
             Path filePath = Paths.get("uploads").resolve(document.getFilePath());
             File file = filePath.toFile();
             
-            // Extract text and get key points
+            // Extract text and get key points (🚨 Added userEmail)
             String text = geminiService.extractText(file, document.getFileType());
-            String keyPoints = geminiService.extractKeyPoints(text);
+            String keyPoints = geminiService.extractKeyPoints(text, userEmail);
             
             Map<String, String> response = new HashMap<>();
             response.put("keyPoints", keyPoints);

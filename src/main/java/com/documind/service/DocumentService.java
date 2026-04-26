@@ -90,11 +90,13 @@ public class DocumentService {
                 
                 // Generate AI summary
                 if (!documentText.isEmpty()) {
-                    aiSummary = geminiService.summarizeDocument(documentText);
+                    // 🚨 ADDED userEmail HERE
+                    aiSummary = geminiService.summarizeDocument(documentText, userEmail);
                     
                     // Auto-classify if no category provided
                     if (category == null || category.trim().isEmpty()) {
-                        aiCategory = geminiService.classifyDocument(documentText);
+                        // 🚨 ADDED userEmail HERE
+                        aiCategory = geminiService.classifyDocument(documentText, userEmail);
                     }
                 }
             } catch (Exception e) {
