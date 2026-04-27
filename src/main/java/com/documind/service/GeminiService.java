@@ -168,7 +168,9 @@ public class GeminiService {
                         .get(0).getAsJsonObject()
                         .get("text").getAsString();
             } else {
-                return "Error: Unable to get response from AI";
+                
+                System.out.println("🚨 GOOGLE API ERROR: " + response.body());
+                return "Google API Error: " + response.body();
             }
             
         } catch (Exception e) {
