@@ -79,29 +79,21 @@ public class DocumentService {
             User user = userRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new RuntimeException("User not found"));
             
-            // Extract text and generate AI summary
+            // Extract text and generate AI category
             String documentText = "";
-            String aiSummary = "";
+            String aiSummary = null; // 🚨 LEAVE THIS NULL! We generate summaries manually in the UI now.
             String aiCategory = category;
             
             try {
                 File savedFile = targetLocation.toFile();
                 documentText = geminiService.extractText(savedFile, file.getContentType());
                 
-                // Generate AI summary
-                if (!documentText.isEmpty()) {
-                    // 🚨 ADDED userEmail HERE
-                    aiSummary = geminiService.summarizeDocument(documentText, userEmail);
-                    
-                    // Auto-classify if no category provided
-                    if (category == null || category.trim().isEmpty()) {
-                        // 🚨 ADDED userEmail HERE
-                        aiCategory = geminiService.classifyDocument(documentText, userEmail);
-                    }
+                // 🚨 ENTERPRISE FIX: Only do Classification during upload. Avoids the "Double Tap" Rate Limit!
+                if (!documentText.isEmpty() && (category == null || category.trim().isEmpty())) {
+                    aiCategory = geminiService.classifyDocument(documentText, userEmail);
                 }
             } catch (Exception e) {
-                System.out.println("AI processing failed: " + e.getMessage());
-                aiSummary = "AI processing not available";
+                System.out.println("AI classification failed: " + e.getMessage());
                 aiCategory = category != null ? category : "Uncategorized";
             }
             
