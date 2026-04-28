@@ -168,10 +168,9 @@ public class GeminiService {
                         .get(0).getAsJsonObject()
                         .get("text").getAsString();
             } else {
-                
-                System.out.println("🚨 GOOGLE API ERROR: " + response.body());
-                return "Google API Error: " + response.body();
-            }
+    System.out.println("🚨 GOOGLE API ERROR: " + response.body());
+    return "AI is currently experiencing high global demand. Please try asking a specific question in the chat below!";
+}
             
         } catch (Exception e) {
             return "Error: " + e.getMessage();
